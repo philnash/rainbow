@@ -52,11 +52,14 @@
         animation:flash-text 0.4s infinite both linear alternate;
         display: block;
       }
-      #tilt-amount{
+      #orientation{
         font-size:2.1em;
         text-align:center;
       }
-      body.rainbow #tilt-amount{
+      #orientation span{
+        display:block;
+      }
+      body.rainbow #orientation{
         display: none;
       }
     </style>
@@ -66,7 +69,7 @@
 
     <h1>Rainbow!!!</h1>
 
-    <p id="tilt-amount">Sorry, your browser doesn't support orientation events.</p>
+    <p id="orientation">Sorry, your browser doesn't support orientation events.</p>
 
     <script>
       (function (window, document) {
@@ -147,9 +150,9 @@
       }(window, document));
 
       window.addEventListener('load', function(){
-        var tilt = document.getElementById('tilt-amount');
+        var tilt = document.getElementById('orientation');
         window.addEventListener('deviceorientation', function(e){
-          tilt.innerHTML = "Tilt: " + Math.round(e.gamma);
+          tilt.innerHTML = "<span>Beta: " + Math.round(e.beta) + "</span><span>Gamma: " + Math.round(e.gamma) + '</span>';
         });
         window.addEventListener('rainbow', function(){
           var body = document.body;

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Rainbow!</title>
+    <meta name="viewport" content="width=device-width user-scalable=0">
+    <style>
+      @-moz-keyframes flash-text {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
+      }
+      @-webkit-keyframes flash-text {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
+      }
+      @keyframes flash-text {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
+      }
+      html{
+        height:100%;
+      }
+      body{
+        height:100%;
+        margin:0;
+        background-repeat:no-repeat;
+        background-attachment:fixed;
+        background-color:#333;
+      }
+      body.rainbow{
+        background-color:#063053;
+        background-image:-webkit-gradient(linear,left bottom,left top,color-stop(0.14,red), color-stop(0.28, orange), color-stop(0.42, yellow),color-stop(0.56,green), color-stop(0.7,blue), color-stop(0.84, indigo), color-stop(1,purple));
+        background-image:-webkit-linear-gradient(red, orange, yellow ,green,blue, indigo, purple);
+        background-image:-moz-linear-gradient(top,red, orange, yellow ,green,blue, indigo, purple);
+        background-image: -ms-linear-gradient(red, orange, yellow ,green,blue, indigo, purple);
+        background-image: -o-linear-gradient(red, orange, yellow ,green,blue, indigo, purple);
+        background-image: linear-gradient(red, orange, yellow ,green,blue, indigo, purple);
+      }
+      body h1{
+        color:#fff;
+        font-family:'Helvetica Neue', 'Helvetica', Arial, sans-serif;
+        text-transform:uppercase;
+        text-align:center;
+        margin-top:100px;
+        display: none;
+      }
+      body.rainbow h1{
+        -webkit-animation:flash-text 0.4s infinite both linear alternate;
+        -moz-animation:flash-text 0.4s infinite both linear alternate;
+        animation:flash-text 0.4s infinite both linear alternate;
+        display: block;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <h1>Rainbow!!!</h1>
+
+    <script>
+      (function (window, document) {
+
+        function Rainbow() {
+
+          //feature detect
+          this.hasDeviceMotion = 'ondeviceorientation' in window;
+
+          //accelerometer values
+          this.lastX = null;
+          this.started = false;
+
+          //create custom event
+          this.event = document.createEvent('Event');
+          this.event.initEvent('rainbow', true, true);
+        }
+
+        //reset timer values
+        Rainbow.prototype.reset = function () {
+          this.lastX = null;
+          this.started = false;
+        };
+
+        //start listening for devicemotion
+        Rainbow.prototype.start = function () {
+          this.reset();
+          if (this.hasDeviceMotion) { window.addEventListener('deviceorientation', this, false); }
+        };
+
+        //stop listening for devicemotion
+        Rainbow.prototype.stop = function () {
+          if (this.hasDeviceMotion) { window.removeEventListener('deviceorientation', this, false); }
+          this.reset();
+        };
+
+        //calculates if shake did occur
+        Rainbow.prototype.deviceorientation = function (e) {
+
+          // var current = e.accelerationIncludingGravity;
+
+          if (this.lastX === null) {
+            this.lastX = e.gamma;
+            return;
+          }
+
+          if (e.gamma < -80){
+            this.started = true;
+          }
+
+          if (this.started && e.gamma > this.lastX){
+            this.lastX = e.gamma;
+          }
+
+          if (this.started && e.gamma > 80){
+            window.dispatchEvent(this.event);
+            this.reset();
+          }
+
+        };
+
+        //event handler
+        Rainbow.prototype.handleEvent = function (e) {
+
+          if (typeof (this[e.type]) === 'function') {
+            return this[e.type](e);
+          }
+        };
+
+        //create a new instance of shake.js.
+        var myRainbowEvent = new Rainbow();
+        myRainbowEvent.start();
+
+      }(window, document));
+
+      window.addEventListener('load', function(){
+        window.addEventListener('rainbow', function(){
+          var body = document.body;
+          body.className += ' rainbow';
+          setTimeout(function(){
+            body.className = body.className.replace(/\srainbow/, '');
+          }, 5000);
+        }, false);
+      }, false);
+    </script>
+  </body>
+</html>

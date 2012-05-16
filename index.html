@@ -149,7 +149,7 @@
       window.addEventListener('load', function(){
         var tilt = document.getElementById('tilt-amount');
         window.addEventListener('deviceorientation', function(e){
-          tilt.innerHTML = "Tilt: " + Math.abs(Math.round(e.gamma));
+          tilt.innerHTML = "Tilt: " + Math.round(e.gamma);
         });
         window.addEventListener('rainbow', function(){
           var body = document.body;

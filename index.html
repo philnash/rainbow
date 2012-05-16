@@ -113,7 +113,7 @@
             return;
           }
 
-          if (e.gamma < -80){
+          if (e.gamma < -70){
             this.started = true;
           }
 
@@ -121,7 +121,11 @@
             this.lastX = e.gamma;
           }
 
-          if (this.started && e.gamma > 80){
+          if (this.started && e.gamma < this.lastX){
+            this.reset();
+          }
+
+          if (this.started && e.gamma > 70){
             window.dispatchEvent(this.event);
             this.reset();
           }
@@ -145,7 +149,7 @@
       window.addEventListener('load', function(){
         var tilt = document.getElementById('tilt-amount');
         window.addEventListener('deviceorientation', function(e){
-          tilt.innerHTML = "Tilt: " + e.gamma;
+          tilt.innerHTML = "Tilt: " + Math.abs(Math.round(e.gamma));
         });
         window.addEventListener('rainbow', function(){
           var body = document.body;
